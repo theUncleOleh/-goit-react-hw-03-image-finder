@@ -8,6 +8,7 @@ class App extends Component {
   state = {
     image: '',
     pictures: [],
+    loading: false,
   };
 
   handleFormSubmit = image => {
@@ -20,18 +21,21 @@ class App extends Component {
     const newImage = this.state.image;
     if (prevImage !== newImage) {
       console.log('new picture');
+      this.setState({ loading: true });
 
       fetch(
         `https://pixabay.com/api/?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
       )
         .then(res => res.json())
-        .then(data => console.log(data.hits));
+        .then(data => this.setState({ pictures: data.hits }))
+        .finally(this.setState({ loading: false }));
     }
   }
 
   render() {
     return (
       <div>
+        {this.state.loading && <div>Loading......</div>}
         <SearchBar onSubmit={this.handleFormSubmit} />
         <ToastContainer
           position="top-right"
