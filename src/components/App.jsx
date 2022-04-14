@@ -2,21 +2,30 @@ import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import SearchBar from './SearchBar';
-import ImageGallery from './ImageGallery';
+
+
 class App extends Component {
   state = {
-    image: '',
+    imagis: '',
   };
 
-  handleFormSubmit = image => {
-    this.setState({ image });
+  handleFormSubmit = imagen => {
+    console.log(imagen);
+    this.setState({ imagen });
   };
+
+  // componetDidUpdate(prevProps, prevState) {
+  //   if (prevState.image !== this.state.image) {
+  //     console.log(this.state.image);
+  //     console.log(prevState.image);
+  //     console.log('imageeee');
+  //   }
+  // }
 
   render() {
     return (
       <div>
         <SearchBar onSubmit={this.handleFormSubmit} />
-        <ImageGallery />
         <ToastContainer
           position="top-right"
           autoClose={5000}

@@ -21,8 +21,8 @@ border-radius: 5px;
 }
 
 .input:hover,
-.input:focus,
-.input:active {
+.input:focus
+ {
 border-color: aquamarine;
 outline-color: aquamarine;
 }
