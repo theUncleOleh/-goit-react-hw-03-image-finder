@@ -16,11 +16,18 @@ class App extends Component {
     loading: false,
     error: null,
     status: 'idle',
+    showModal: false,
   };
 
   handleFormSubmit = image => {
     // console.log(image);
     this.setState({ image });
+  };
+
+  toggleModal = () => {
+    this.setState(state => ({
+      showModal: !state.showModal,
+    }));
   };
 
   async componentDidUpdate(prevProps, prevState) {
