@@ -9,7 +9,7 @@ export default function ImageGallery({ pictures }) {
         <ImageGalleryItem
           key={picture.id}
           webformatURL={picture.webformatURL}
-          largeImageURL={picture.largeImageURL}
+          largeImageUrl={picture.largeImageURL}
           tags={picture.tags}
         />
       ))}

@@ -8,6 +8,7 @@ import s from './App.module.css';
 import SearchBar from './SearchBar';
 import ImageGallery from './ImageGallery';
 import NotificationMessage from './NotificationMesage';
+import Modal from './Modal';
 
 class App extends Component {
   state = {
@@ -16,7 +17,7 @@ class App extends Component {
     loading: false,
     error: null,
     status: 'idle',
-    showModal: false,
+    largeImageSrc: '',
   };
 
   handleFormSubmit = image => {
@@ -24,10 +25,8 @@ class App extends Component {
     this.setState({ image });
   };
 
-  toggleModal = () => {
-    this.setState(state => ({
-      showModal: !state.showModal,
-    }));
+  onImageClick = () => {
+    console.log('aaaaaa');
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -104,7 +103,8 @@ class App extends Component {
 
           <ImageGallery pictures={pictures} />
           {pictures && <button className={s.button}>Load more</button>}
-
+          {/* {this.state.largeImageUrl.length > 0 && <Modal />} */}
+          <Modal />
           <ToastContainer
             position="top-right"
             autoClose={5000}
