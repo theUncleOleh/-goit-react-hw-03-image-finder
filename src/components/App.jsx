@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 // import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -119,7 +120,7 @@ class App extends Component {
                 className={s.buttonModal}
                 onClick={this.modalClose}
               >
-                Close
+                <AiOutlineCloseCircle />
               </button>
               <img
                 src={this.state.largeImageURL}
