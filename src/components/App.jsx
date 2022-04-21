@@ -54,7 +54,7 @@ class App extends Component {
         .then(response =>
           this.setState({ pictures: response.data.hits, status: 'resolved' })
         )
-        .catch(error => this.setState({ error }));
+        .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }
 
