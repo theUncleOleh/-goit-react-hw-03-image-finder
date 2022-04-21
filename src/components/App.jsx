@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
 import { Oval } from 'react-loader-spinner';
+
 // import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './App.module.css';
@@ -17,7 +18,7 @@ class App extends Component {
     loading: false,
     error: null,
     status: 'idle',
-    largeImageSrc: '',
+    largeImageURL: '',
   };
 
   handleFormSubmit = image => {
@@ -25,8 +26,17 @@ class App extends Component {
     this.setState({ image });
   };
 
-  onImageClick = () => {
-    console.log('aaaaaa');
+  onImageClick = largeImageURL => {
+    this.setState({
+      largeImageURL,
+    });
+    console.log(largeImageURL);
+  };
+
+  modalClose = () => {
+    this.setState({
+      largeImageURL: '',
+    });
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -73,7 +83,7 @@ class App extends Component {
   // }
 
   render() {
-    const { error, pictures, status } = this.state;
+    const { error, pictures, status, largeImageURL } = this.state;
 
     if (status === 'idle') {
       return (
@@ -100,11 +110,26 @@ class App extends Component {
       return (
         <div className={s.app}>
           <SearchBar onSubmit={this.handleFormSubmit} />
-
-          <ImageGallery pictures={pictures} />
+          <ImageGallery pictures={pictures} onClick={this.onImageClick} />
           {pictures && <button className={s.button}>Load more</button>}
-          {/* {this.state.largeImageUrl.length > 0 && <Modal />} */}
-          <Modal />
+          {largeImageURL.length > 0 && (
+            <Modal onClose={this.modalClose}>
+              <button
+                type="button"
+                className={s.buttonModal}
+                onClick={this.modalClose}
+              >
+                Close
+              </button>
+              <img
+                src={this.state.largeImageURL}
+                alt=""
+                width="100%"
+                height="100%"
+              />
+            </Modal>
+          )}
+
           <ToastContainer
             position="top-right"
             autoClose={5000}

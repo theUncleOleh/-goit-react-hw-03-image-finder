@@ -6,9 +6,10 @@ export default function ImageGalleryItem({
   webformatURL,
   largeImageURL,
   tags,
+  onClick,
 }) {
   return (
-    <li className={s.item}>
+    <li className={s.item} onClick={() => onClick(largeImageURL)}>
       <img src={webformatURL} alt={tags} className={s.img} />
     </li>
   );
