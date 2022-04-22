@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { ToastContainer } from 'react-toastify';
-import { Oval } from 'react-loader-spinner';
+import Loader from './Loader';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 
 // import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
@@ -31,7 +31,7 @@ class App extends Component {
     this.setState({
       largeImageURL,
     });
-    console.log(largeImageURL);
+    // console.log(largeImageURL);
   };
 
   modalClose = () => {
@@ -96,11 +96,7 @@ class App extends Component {
     }
 
     if (status === 'pending') {
-      return (
-        <div className={s.icon}>
-          <Oval color="#00BFFF" height={80} width={80} />
-        </div>
-      );
+      return <Loader />;
     }
 
     if (status === 'rejected') {
