@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+
 import { ToastContainer } from 'react-toastify';
 import Loader from './Loader';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
-
 // import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
 import 'react-toastify/dist/ReactToastify.css';
 import s from './App.module.css';
@@ -11,7 +10,9 @@ import SearchBar from './SearchBar';
 import ImageGallery from './ImageGallery';
 import NotificationMessage from './NotificationMesage';
 import Modal from './Modal';
-
+import Button from './Button';
+import ErrorMessage from './ErrorMessage';
+import servicesApi from '../services/services-api';
 class App extends Component {
   state = {
     image: '',
@@ -20,6 +21,7 @@ class App extends Component {
     error: null,
     status: 'idle',
     largeImageURL: '',
+    page: 1,
   };
 
   handleFormSubmit = image => {
@@ -40,21 +42,36 @@ class App extends Component {
     });
   };
 
+  handleLoadButtonClick = () => {
+    console.log(this.state.page);
+    this.setState(state => {
+      return { page: state.page + 1 };
+    });
+  };
+
   async componentDidUpdate(prevProps, prevState) {
     const prevImage = prevState.image;
     const newImage = this.state.image;
-    axios.defaults.baseURL = 'https://pixabay.com/api/';
+    // axios.defaults.baseURL = 'https://pixabay.com/api/';
 
     if (prevImage !== newImage) {
       this.setState({ status: 'pending' });
-      await axios
-        .get(
-          `?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
-        )
+      // await axios
+      //   .get(
+      //     `?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
+      //   )
+      servicesApi
+        .axiosApi(newImage)
         .then(response =>
           this.setState({ pictures: response.data.hits, status: 'resolved' })
         )
         .catch(error => this.setState({ error, status: 'rejected' }));
+    }
+    const prevPage = prevState.page;
+    const newPage = this.state.page;
+
+    if (prevPage !== newPage) {
+      this.setState({ status: 'pending' });
     }
   }
 
@@ -100,7 +117,7 @@ class App extends Component {
     }
 
     if (status === 'rejected') {
-      return <h2>{error.message}</h2>;
+      return <ErrorMessage message={error.message} />;
     }
 
     if (status === 'resolved') {
@@ -108,7 +125,7 @@ class App extends Component {
         <div className={s.app}>
           <SearchBar onSubmit={this.handleFormSubmit} />
           <ImageGallery pictures={pictures} onClick={this.onImageClick} />
-          {pictures && <button className={s.button}>Load more</button>}
+          {pictures && <Button onClick={this.handleLoadButtonClick} />}
           {largeImageURL.length > 0 && (
             <Modal onClose={this.modalClose}>
               <button
