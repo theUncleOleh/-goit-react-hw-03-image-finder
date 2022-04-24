@@ -26,7 +26,7 @@ class App extends Component {
 
   handleFormSubmit = image => {
     // console.log(image);
-    this.setState({ image });
+    this.setState({ image, page: 1 });
   };
 
   onImageClick = largeImageURL => {
@@ -43,7 +43,7 @@ class App extends Component {
   };
 
   handleLoadButtonClick = () => {
-    console.log(this.state.page);
+    console.log('click the button', this.state.page);
     this.setState(state => {
       return { page: state.page + 1 };
     });
@@ -52,6 +52,10 @@ class App extends Component {
   async componentDidUpdate(prevProps, prevState) {
     const prevImage = prevState.image;
     const newImage = this.state.image;
+    const prevPage = prevState.page;
+    const newPage = this.state.page;
+    console.log('before', prevPage);
+    console.log('after', newPage);
     // axios.defaults.baseURL = 'https://pixabay.com/api/';
 
     if (prevImage !== newImage) {
@@ -61,17 +65,28 @@ class App extends Component {
       //     `?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
       //   )
       servicesApi
-        .axiosApi(newImage)
+        .axiosApi(newImage, newPage)
         .then(response =>
           this.setState({ pictures: response.data.hits, status: 'resolved' })
         )
-        .catch(error => this.setState({ error, status: 'rejected' }));
+        .catch(error => {
+          this.setState({ error, status: 'rejected' });
+        });
     }
-    const prevPage = prevState.page;
-    const newPage = this.state.page;
 
     if (prevPage !== newPage) {
       this.setState({ status: 'pending' });
+      servicesApi
+        .axiosApi(newImage, newPage)
+        .then(response =>
+          this.setState(state => ({
+            pictures: [...state.pictures, ...response.data.hits],
+            status: 'resolved',
+          }))
+        )
+        .catch(error => {
+          this.setState({ error, status: 'rejected' });
+        });
     }
   }
 
