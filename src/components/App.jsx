@@ -12,21 +12,23 @@ import NotificationMessage from './NotificationMesage';
 import Modal from './Modal';
 import Button from './Button';
 import ErrorMessage from './ErrorMessage';
-import servicesApi from '../services/services-api';
+import axiosApi from '../services/services-api';
 class App extends Component {
   state = {
-    image: '',
+    searchQuery: null,
+
     pictures: [],
     loading: false,
     error: null,
     status: 'idle',
     largeImageURL: '',
     page: 1,
+    newPages: 0,
   };
 
-  handleFormSubmit = image => {
+  handleFormSubmit = query => {
     // console.log(image);
-    this.setState({ image, page: 1 });
+    this.setState({ searchQuery: query, page: 1 });
   };
 
   onImageClick = largeImageURL => {
@@ -44,51 +46,82 @@ class App extends Component {
 
   handleLoadButtonClick = () => {
     console.log('click the button', this.state.page);
-    this.setState(state => {
-      return { page: state.page + 1 };
+
+    this.setState(prevState => {
+      return { page: prevState.page + 1 };
     });
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    const prevImage = prevState.image;
-    const newImage = this.state.image;
-    const prevPage = prevState.page;
-    const newPage = this.state.page;
-    console.log('before', prevPage);
-    console.log('after', newPage);
+    // const prevPage = prevState.page;
+    // const newPage = this.state.page;
+    console.log('before', prevState.searchQuery);
+    console.log('after', this.state.searchQuery);
     // axios.defaults.baseURL = 'https://pixabay.com/api/';
 
-    if (prevImage !== newImage) {
+    if (prevState.searchQuery !== this.state.searchQuery) {
       this.setState({ status: 'pending' });
-      // await axios
-      //   .get(
-      //     `?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
-      //   )
-      servicesApi
-        .axiosApi(newImage, newPage)
-        .then(response =>
-          this.setState({ pictures: response.data.hits, status: 'resolved' })
-        )
-        .catch(error => {
-          this.setState({ error, status: 'rejected' });
-        });
+      this.fetchImages();
+    }
+    // await axios
+    //   .get(
+    //     `?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
+    //   )
+    // servicesApi
+    //   .axiosApi(newImage, this.state.page)
+    //   .then(response =>
+    //     this.setState({ pictures: response.data.hits, status: 'resolved' })
+    //   )
+    //   .catch(error => {
+    //     this.setState({ error, status: 'rejected' });
+    //   });
+
+    // if (newPage === 1) {
+    //   this.setState({ status: 'pending' });
+    //   servicesApi
+    //     .axiosApi(newImage, newPage)
+    //     .then(response =>
+    //       this.setState({ pictures: response.data.hits, status: 'resolved' })
+    //     )
+    //     .catch(error => {
+    //       this.setState({ error, status: 'rejected' });
+    //     });
+    // }
+    if (prevState.page !== this.state.page) {
+      this.fetchImages();
     }
 
-    if (prevPage !== newPage) {
-      this.setState({ status: 'pending' });
-      servicesApi
-        .axiosApi(newImage, newPage)
-        .then(response =>
-          this.setState(state => ({
-            pictures: [...state.pictures, ...response.data.hits],
-            status: 'resolved',
-          }))
-        )
-        .catch(error => {
-          this.setState({ error, status: 'rejected' });
-        });
-    }
+    //   if (prevPage !== newPage) {
+    //     this.setState({ status: 'pending' });
+    //     servicesApi
+    //       .axiosApi(newImage, newPage)
+    //       .then(response =>
+    //         this.setState(state => ({
+    //           pictures: [...state.pictures, ...response.data.hits],
+    //           status: 'resolved',
+    //         }))
+    //       )
+    //       .catch(error => {
+    //         this.setState({ error, status: 'rejected' });
+    //       });
+    //   }
+    // }
   }
+  fetchImages = async () => {
+    const { searchQuery, page } = this.state;
+
+    try {
+      const data = await axiosApi({ searchQuery, page });
+
+      this.setState(prevState => ({
+        pictures: [...prevState.pictures, ...data],
+        status: 'resolved',
+        newPage: data.length,
+      }));
+    } catch (error) {
+      this.setState({ error, status: 'rejected' });
+    }
+  };
 
   // componentDidUpdate(prevProps, prevState) {
   //   const prevImage = prevState.image;
@@ -197,5 +230,6 @@ class App extends Component {
     // );
   }
 }
+
 
 export default App;

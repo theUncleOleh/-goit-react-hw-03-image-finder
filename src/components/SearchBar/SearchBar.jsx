@@ -5,20 +5,20 @@ import { toast } from 'react-toastify';
 
 class SearchBar extends Component {
   state = {
-    image: '',
+    searchQuery: '',
   };
   handleInputChange = event => {
-    this.setState({ image: event.currentTarget.value.toLowerCase() });
+    this.setState({ searchQuery: event.currentTarget.value.toLowerCase() });
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    if (this.state.image.trim() === '') {
+    if (this.state.searchQuery.trim() === '') {
       return toast.warning('что вы ищите?');
     }
     console.log(this.state);
-    this.props.onSubmit(this.state.image);
-    this.setState({ image: '' });
+    this.props.onSubmit(this.state.searchQuery);
+    this.setState({ searchQuery: '' });
   };
 
   render() {
@@ -38,7 +38,7 @@ class SearchBar extends Component {
             autoFocus
             placeholder="Search images and photos"
             name="image"
-            value={this.state.image}
+            value={this.state.searchQuery}
             onChange={this.handleInputChange}
           />
         </form>
