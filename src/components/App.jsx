@@ -23,7 +23,7 @@ class App extends Component {
     status: 'idle',
     largeImageURL: '',
     page: 1,
-    newPages: 0,
+    
   };
 
   handleFormSubmit = query => {
