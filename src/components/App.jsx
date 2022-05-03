@@ -16,14 +16,12 @@ import axiosApi from '../services/services-api';
 class App extends Component {
   state = {
     searchQuery: null,
-
     pictures: [],
     loading: false,
     error: null,
     status: 'idle',
     largeImageURL: '',
     page: 1,
-    
   };
 
   handleFormSubmit = query => {
@@ -53,14 +51,10 @@ class App extends Component {
   };
 
   async componentDidUpdate(prevProps, prevState) {
-    // const prevPage = prevState.page;
-    // const newPage = this.state.page;
     console.log('before', prevState.searchQuery);
     console.log('after', this.state.searchQuery);
-    // axios.defaults.baseURL = 'https://pixabay.com/api/';
-
     if (prevState.searchQuery !== this.state.searchQuery) {
-      this.setState({ status: 'pending' });
+      this.setState({ status: 'pending', pictures: [] });
       this.fetchImages();
     }
     // await axios
@@ -173,6 +167,7 @@ class App extends Component {
         <div className={s.app}>
           <SearchBar onSubmit={this.handleFormSubmit} />
           <ImageGallery pictures={pictures} onClick={this.onImageClick} />
+          <ToastContainer position="top-right" autoClose={5000} />
           {pictures && <Button onClick={this.handleLoadButtonClick} />}
           {largeImageURL.length > 0 && (
             <Modal onClose={this.modalClose}>
@@ -191,18 +186,6 @@ class App extends Component {
               />
             </Modal>
           )}
-
-          <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
         </div>
       );
     }

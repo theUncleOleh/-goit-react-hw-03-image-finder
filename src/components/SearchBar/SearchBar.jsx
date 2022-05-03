@@ -14,8 +14,12 @@ class SearchBar extends Component {
   handleSubmit = event => {
     event.preventDefault();
     if (this.state.searchQuery.trim() === '') {
-      return toast.warning('что вы ищите?');
+      alert('aaaaaaaaaa !');
+      // toast("Wow so easy !");
+      
+      return;
     }
+
     console.log(this.state);
     this.props.onSubmit(this.state.searchQuery);
     this.setState({ searchQuery: '' });
@@ -37,7 +41,7 @@ class SearchBar extends Component {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            name="image"
+            name="searchQuery"
             value={this.state.searchQuery}
             onChange={this.handleInputChange}
           />
