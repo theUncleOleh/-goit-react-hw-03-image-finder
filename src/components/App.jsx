@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { ToastContainer } from 'react-toastify';
+
 import Loader from './Loader';
 import { AiOutlineCloseCircle } from 'react-icons/ai';
 // import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
@@ -167,7 +167,6 @@ class App extends Component {
         <div className={s.app}>
           <SearchBar onSubmit={this.handleFormSubmit} />
           <ImageGallery pictures={pictures} onClick={this.onImageClick} />
-          <ToastContainer position="top-right" autoClose={5000} />
           {pictures && <Button onClick={this.handleLoadButtonClick} />}
           {largeImageURL.length > 0 && (
             <Modal onClose={this.modalClose}>

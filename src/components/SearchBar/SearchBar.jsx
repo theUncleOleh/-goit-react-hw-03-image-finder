@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import s from './SearchBar.module.css';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { toast } from 'react-toastify';
+
 
 class SearchBar extends Component {
   state = {
