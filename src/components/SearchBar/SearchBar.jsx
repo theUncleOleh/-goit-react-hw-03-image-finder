@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import s from './SearchBar.module.css';
 import { AiOutlineSearch } from 'react-icons/ai';
-
+import { toast } from 'react-toastify';
 
 class SearchBar extends Component {
   state = {
@@ -14,9 +14,8 @@ class SearchBar extends Component {
   handleSubmit = event => {
     event.preventDefault();
     if (this.state.searchQuery.trim() === '') {
-      alert('aaaaaaaaaa !');
-      // toast("Wow so easy !");
-      
+      toast.warning('I do not know what you want !');
+
       return;
     }
 
