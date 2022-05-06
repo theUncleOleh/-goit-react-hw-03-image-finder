@@ -12,7 +12,7 @@ import React, { Component } from 'react';
  import Button from './Button';
  import ErrorMessage from './ErrorMessage';
  import axiosApi from '../services/services-api';
-import { upload } from '@testing-library/user-event/dist/upload';
+
 class App extends Component {
   state = {
     searchQuery: null,
@@ -22,7 +22,6 @@ class App extends Component {
     status: 'idle',
     largeImageURL: '',
     page: 1,
-    upload: 0,
   };
 
   handleFormSubmit = query => {
@@ -144,7 +143,7 @@ class App extends Component {
   // }
 
   render() {
-    const { error, pictures, status, largeImageURL, upload } = this.state;
+    const { error, pictures, status, largeImageURL } = this.state;
     const totalPictures = pictures.length;
     console.log(totalPictures);
     if (status === 'idle') {
