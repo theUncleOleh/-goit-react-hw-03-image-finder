@@ -22,6 +22,7 @@ class App extends Component {
     status: 'idle',
     largeImageURL: '',
     page: 1,
+    totalPages: 0,
   };
 
   handleFormSubmit = query => {
@@ -57,93 +58,29 @@ class App extends Component {
       this.setState({ status: 'pending', pictures: [] });
       this.fetchImages();
     }
-    // await axios
-    //   .get(
-    //     `?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
-    //   )
-    // servicesApi
-    //   .axiosApi(newImage, this.state.page)
-    //   .then(response =>
-    //     this.setState({ pictures: response.data.hits, status: 'resolved' })
-    //   )
-    //   .catch(error => {
-    //     this.setState({ error, status: 'rejected' });
-    //   });
 
-    // if (newPage === 1) {
-    //   this.setState({ status: 'pending' });
-    //   servicesApi
-    //     .axiosApi(newImage, newPage)
-    //     .then(response =>
-    //       this.setState({ pictures: response.data.hits, status: 'resolved' })
-    //     )
-    //     .catch(error => {
-    //       this.setState({ error, status: 'rejected' });
-    //     });
-    // }
     if (prevState.page !== this.state.page) {
       this.fetchImages();
     }
-
-    //   if (prevPage !== newPage) {
-    //     this.setState({ status: 'pending' });
-    //     servicesApi
-    //       .axiosApi(newImage, newPage)
-    //       .then(response =>
-    //         this.setState(state => ({
-    //           pictures: [...state.pictures, ...response.data.hits],
-    //           status: 'resolved',
-    //         }))
-    //       )
-    //       .catch(error => {
-    //         this.setState({ error, status: 'rejected' });
-    //       });
-    //   }
-    // }
   }
   fetchImages = async () => {
     const { searchQuery, page } = this.state;
 
     try {
-      const data = await axiosApi({ searchQuery, page });
-
-      this.setState(prevState => ({
-        pictures: [...prevState.pictures, ...data],
-        status: 'resolved',
-        newPage: data.length,
-      }));
+      await axiosApi({ searchQuery, page }).then(data => {
+        this.setState(prevState => ({
+          pictures: [...prevState.pictures, ...data.hits],
+          totalPages: data.totalHits,
+          status: 'resolved',
+        }));
+      });
     } catch (error) {
       this.setState({ error, status: 'rejected' });
     }
   };
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   const prevImage = prevState.image;
-  //   const newImage = this.state.image;
-  //   if (prevImage !== newImage) {
-  //     console.log('new picture');
-  //     // this.setState({ loading: true, pictures: [] });
-  //     this.setState({ status: 'pending' });
-
-  //     fetch(
-  //       `https://pixabay.com/api/?q=${newImage}&page=1&key=24437827-e20f686b1c65a4a2859f17630&image_type=photo&orientation=horizontal&per_page=12`
-  //     )
-  //       .then(response => {
-  //         if (response.ok) {
-  //           return response.json();
-  //         }
-  //         return Promise.reject(new Error('Картинки с таким названием нет'));
-  //       })
-  //       .then(data =>
-  //         this.setState({ pictures: data.hits, status: 'resolved' })
-  //       )
-  //       .catch(error => this.setState({ error, status: 'rejected' }));
-  //     // .finally(this.setState({ loading: false }));
-  //   }
-  // }
-
   render() {
-    const { error, pictures, status, largeImageURL } = this.state;
+    const { error, pictures, status, largeImageURL, totalPages } = this.state;
     const totalPictures = pictures.length;
     console.log(totalPictures);
     if (status === 'idle') {
@@ -172,7 +109,7 @@ class App extends Component {
           {/* {pictures.length > 0 && (
              <Button onClick={this.handleLoadButtonClick} />
            )} */}
-          {totalPictures > 0 && totalPictures >= 12 && (
+          {totalPictures > 0 && totalPictures < totalPages && (
             <Button onClick={this.handleLoadButtonClick} />
           )}
 
@@ -196,28 +133,6 @@ class App extends Component {
         </div>
       );
     }
-    // return (
-    //   <div className={s.app}>
-    //     {!image && <div>tell me what you want</div>}
-    //     {error && <h2>{error.message}</h2>}
-    //     {loading && <div>Loading......</div>}
-    //     <SearchBar onSubmit={this.handleFormSubmit} />
-    //     <ImageGallery pictures={pictures} />
-    //     {pictures && <button className={s.button}>Load more</button>}
-
-    //     <ToastContainer
-    //       position="top-right"
-    //       autoClose={5000}
-    //       hideProgressBar={false}
-    //       newestOnTop={false}
-    //       closeOnClick
-    //       rtl={false}
-    //       pauseOnFocusLoss
-    //       draggable
-    //       pauseOnHover
-    //     />
-    //   </div>
-    // );
   }
 }
 
